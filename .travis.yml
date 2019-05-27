@@ -1,20 +1,20 @@
 language: node_js
 node_js:
-  - '8'
+- '8'
 branches:
   only:
-    - master
+  - master
 cache:
   directories:
   - node_modules
 script:
-  - cd functions
-  - npm install
-  - npm run lint
-  - npm run test
-  - cd ..
+- cd functions
+- npm install
+- npm run lint
+- npm run test
+- cd ..
 deploy:
   provider: firebase
   token:
-    secure: ''
+    secure: L0ZLX9NL4uVptp2J+wGttLy0xzAuqZ4mr3xJH36c6UysUPDTvNdZU90Y+qduwtF9n61mtycYD5IpmVQqHK32dzveJfoNFXQ4djB821stmOiit0k5+IaH8bikj59KsCxfN8X6jOVzXSPKbT/NgwDc0o9t1F1mEtPuQ29gF2Xw/eDgd1a29OxnVLS037Z/L1zotHMbMyVB5hJayUGF5cazArRcxWqUfK/obSBi5E+BmsTx8IfyFCCPkf1CCYijVmHMX5FKsqKVUn1Gl4ATqwf0WSwBcTcyrxSM97aQQEosGKnRYpEMN4IlhmFf61o3seZF/2jPN8/GFy/UZRZg3QvPvx2nqEHH0K3vrrXl2uCmCuLNcXVhBYGsJBWRLJGp4T6KWRmVnDQHY0DZhHSIO7rDsQ04SEr4iox5ry+zo+aJYJiwfDHkS8LJgGD4Ht0azaIEc7aohQUd7JShf6kjtmYSxqj/GHD0Z8kyoLPUw/6od/8nOv0NmT4bF0x+FjoKPNZv8+AySxFbPQeiBWrMLQqQLBbWXbz0OPBy3Si6NqZFm0n/JwbTAeesrNJRrtNllEYkBnvReawBvMgjU+RfxI9e5eRPBKHXGdByCggHEIsiwH2bWrcnSfhSV/r4trq7tNado48Jnuy71VhbqgAHC2pbaYJ3AqYWQ9QY27n6NvWm6PA=
   skip_cleanup: true
