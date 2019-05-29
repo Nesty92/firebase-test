@@ -1,52 +1,43 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import * as express from 'express';
-import * as bodyParser from "body-parser";
-import { BookRoutes } from './router/router';
-import * as compression from 'compression';
-import * as cors from 'cors';
+import { environment } from './enviroment/enviroment';
 
 admin.initializeApp(functions.config().firebase);
-// const db = admin.firestore(); // Add this
-
-const app = express();
-const main = express();
-
-const routePrv: BookRoutes = new BookRoutes();
-
-main.use('/api/v1', app);
-routePrv.routes(app);
-main.use(bodyParser.json());
-app.use(compression())
-app.use(cors());
+const db = admin.firestore();
 
 
-export const webApi = functions.https.onRequest(main);
+exports.addNumbers = functions.https.onCall((data, context) => {
+  const firstNumber = data.firstNumber;
+  const secondNumber = data.secondNumber;
 
-// app.get('/hello', (request, response) => {
-//   response.send('hello world.');
-// });
+  // // Checking that the user is authenticated.
+  // if (!context.auth) {
+  //   // Throwing an HttpsError so that the client gets the error details.
+  //   throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
+  //     'while authenticated.');
+  // }
 
+  if (!Number.isFinite(firstNumber) || !Number.isFinite(secondNumber)) {
+    // Throwing an HttpsError so that the client gets the error details.
+    throw new functions.https.HttpsError('invalid-argument', 'The function must be called with ' +
+      'two arguments "firstNumber" and "secondNumber" which must both be numbers.');
+  }
 
-// app.post('/fights', async (request, response) => {
-//   try {
-//     const { winner, loser, title } = request.body;
-//     const data = {
-//       winner,
-//       loser,
-//       title
-//     } 
-//     const fightRef = await db.collection('fights').add(data);
-//     const fight = await fightRef.get();
+  // return db.getCollections().then( list => {
+  //   return list;
+  // })
 
-//     response.json({
-//       id: fightRef.id,
-//       data: fight.data()
-//     });
-
-//   } catch(error){
-
-//     response.status(500).send(error);
-
-//   }
-// });
+  return db.collection(environment.COLLECTION_NAME)
+    .add( {
+      firstNumber: firstNumber,
+      secondNumber: secondNumber,
+      operator: '+',
+      operationResult: firstNumber + secondNumber,
+    })
+    .then(doc => {
+      return doc;
+    }).catch(err => {
+      console.error(err);
+      throw new functions.https.HttpsError('internal', 'unable to store data');
+    });
+});
