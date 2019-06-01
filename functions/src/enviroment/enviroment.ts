@@ -1,3 +1,4 @@
 export const environment = {
-  COLLECTION_NAME : 'users'
+  USER_COLLECTION_NAME : 'users',
+  POST_COLLECTION_NAME : 'posts'
 };
