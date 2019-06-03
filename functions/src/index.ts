@@ -1,8 +1,9 @@
-import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+import * as functions from 'firebase-functions';
 import {environment} from './enviroment/enviroment';
 
 admin.initializeApp();
+
 const db = admin.firestore();
 
 
@@ -29,11 +30,11 @@ exports.addPost = functions.https.onCall((data, context) => {
 
     return db.collection(environment.POST_COLLECTION_NAME)
         .add(newPost)
-        .then(doc => {
+        .then(() => {
             return {
                 status: 'ok'
             };
-        }).catch(err => {
+        }).catch((err: any) => {
             console.error(err);
             throw new functions.https.HttpsError('internal', 'unable to store data');
         });
@@ -47,8 +48,7 @@ exports.updatePost = functions.https.onCall((data, context) => {
     // Checking that the user is authenticated.
     if (!context.auth) {
         // Throwing an HttpsError so that the client gets the error details.
-        throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
-            'while authenticated.');
+        throw new functions.https.HttpsError('failed-precondition', 'The function must be called while authenticated.');
     }
 
     if (!id || !title) {
@@ -70,7 +70,7 @@ exports.updatePost = functions.https.onCall((data, context) => {
             return {
                 status: 'ok'
             };
-        }).catch(err => {
+        }).catch(() => {
             throw new functions.https.HttpsError('internal', 'unable to store data');
         });
 });
@@ -93,7 +93,7 @@ exports.deletePost = functions.https.onCall((data, context) => {
 
     return db.collection(environment.POST_COLLECTION_NAME).doc(id)
         .delete()
-        .then(doc => {
+        .then((doc: any) => {
             console.log(doc);
             return {
                 status: 'ok'
@@ -131,7 +131,7 @@ exports.updateUser = functions.https.onCall((data, context) => {
             return {
                 status: 'ok'
             };
-        }).catch(err => {
+        }).catch(() => {
             throw new functions.https.HttpsError('internal', 'unable to store data');
         });
 });

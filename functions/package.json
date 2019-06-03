@@ -2,12 +2,17 @@
   "name": "functions",
   "scripts": {
     "lint": "tslint --project tsconfig.json",
+    "test": "npm run test-offline",
     "build": "tsc",
+    "test-offline": "mocha --timeout 10000 --require ts-node/register --reporter spec src/test/online.ts --exit",
     "serve": "npm run build && firebase serve --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "10"
   },
   "main": "lib/index.js",
   "dependencies": {
@@ -15,7 +20,16 @@
     "firebase-functions": "^2.3.0"
   },
   "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.7",
+    "@types/sinon": "^7.0.12",
+    "@types/sinon-chai": "^3.2.2",
     "firebase-functions-test": "^0.1.6",
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4",
+    "sinon": "^7.3.2",
+    "sinon-chai": "latest",
+    "ts-node": "^8.2.0",
     "tslint": "^5.12.0",
     "typescript": "^3.2.2"
   },
