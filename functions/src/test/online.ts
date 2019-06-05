@@ -7,6 +7,7 @@ import * as chai from "chai";
 
 // const assert = chai.assert;
 const expect = chai.expect;
+// const should = chai.should();
 // Require and initialize firebase-functions-test in "online mode" with your project's
 // credentials and service account key.
 const projectConfig = {
@@ -37,9 +38,10 @@ describe('Cloud Functions', () => {
             text: 'text',
             user: 'user_uid'
         };
+
         // Wrap the addPost function
         it('should throw auth error', async () => {
-            expect(() => test.wrap(myFunctions.addPost as any)(newPost)).to.throw();
+            expect(() => { test.wrap(myFunctions.addPost)(newPost) }).to.throw();
         })
     });
 
@@ -56,9 +58,7 @@ describe('Cloud Functions', () => {
                     uid: 'jckS2Q0'
                 },
             });
-            expect(result).to.deep.equal({
-                status: 'ok'
-            });
+            expect(result).to.deep.property('status').to.equal('ok');
         })
     });
 
@@ -69,7 +69,7 @@ describe('Cloud Functions', () => {
         };
         // Wrap the addPost function
         it('should throw error', async () => {
-            expect(() => test.wrap(myFunctions.addPost as any)(newPost)).to.throw();
+            expect(() => { test.wrap(myFunctions.addPost)(newPost) }).to.throw();
         })
     });
 
@@ -79,9 +79,9 @@ describe('Cloud Functions', () => {
             text: 'text',
             user: 'user_uid'
         };
-        // Wrap the addPost function
+        // Wrap the updatePost function
         it('should throw auth error', async () => {
-            expect(() => test.wrap(myFunctions.addPost as any)(newPost)).to.throw();
+            expect(() => { test.wrap(myFunctions.updatePost)(newPost) }).to.throw();
         })
     });
 
@@ -90,11 +90,54 @@ describe('Cloud Functions', () => {
             title: 'title',
             text: 'text',
         };
-        // Wrap the addPost function
+        // Wrap the updatePost function
         it('should update post', async () => {
-            const result = await test.wrap(myFunctions.updatePost)({ id: 'ATvKxxlpMANiS2a5Y1Si', ...newPost}, {
+            const { uid } = await test.wrap(myFunctions.addPost)(newPost, {
+                auth: {
+                    uid: 'jckS2Q0'
+                },
+            });
+
+            const result = await test.wrap(myFunctions.updatePost)({ id: uid, ...newPost }, {
                 auth: {
                     uid: 'user_id'
+                },
+            });
+            expect(result).to.deep.equal({
+                status: 'ok'
+            });
+        })
+    });
+
+    describe('deletePost-without-user', () => {
+        const newPost = {
+            title: 'title',
+            text: 'text',
+            user: 'user_uid'
+        };
+
+        // Wrap the deletePost function
+        it('should throw auth error', async () => {
+            expect(() => { test.wrap(myFunctions.deletePost)(newPost) }).to.throw();
+        })
+    });
+
+    describe('deletePost-with-user', () => {
+        const newPost = {
+            title: 'title',
+            text: 'text',
+            user: 'user_uid'
+        };
+        // Wrap the deletePost function
+        it('should delete post', async () => {
+            const { uid } = await test.wrap(myFunctions.addPost)(newPost, {
+                auth: {
+                    uid: 'jckS2Q0'
+                },
+            });
+            const result = await test.wrap(myFunctions.deletePost)({ id: uid }, {
+                auth: {
+                    uid: 'jckS2Q0'
                 },
             });
             expect(result).to.deep.equal({
