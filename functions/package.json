@@ -4,12 +4,14 @@
     "lint": "tslint --project tsconfig.json",
     "test": "npm run test-offline",
     "build": "tsc",
-    "test-offline": "mocha --timeout 10000 --require ts-node/register --reporter spec src/test/online.ts --exit",
+    "test-online": "mocha --timeout 10000 --require ts-node/register --reporter spec src/test/online.ts --exit",
     "serve": "npm run build && firebase serve --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
+    "logs": "firebase functions:log",
+    "firebase:cideploy:funcs": "npm run firebase -- deploy -P $PROJECT_ID --token $FIREBASE_TOKEN --only functions",
+    "firebase": "./node_modules/.bin/firebase"
   },
   "engines": {
     "node": "10"
