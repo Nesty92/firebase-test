@@ -30,9 +30,10 @@ exports.addPost = functions.https.onCall((data, context) => {
 
     return db.collection(environment.POST_COLLECTION_NAME)
         .add(newPost)
-        .then(() => {
+        .then((doc: FirebaseFirestore.DocumentReference) => {
             return {
-                status: 'ok'
+                status: 'ok',
+                uid: doc.id
             };
         }).catch((err: any) => {
             console.error(err);
@@ -93,7 +94,7 @@ exports.deletePost = functions.https.onCall((data, context) => {
 
     return db.collection(environment.POST_COLLECTION_NAME).doc(id)
         .delete()
-        .then((doc: any) => {
+        .then((doc: FirebaseFirestore.DocumentData) => {
             console.log(doc);
             return {
                 status: 'ok'
